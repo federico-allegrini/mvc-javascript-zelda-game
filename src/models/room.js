@@ -9,8 +9,36 @@ class Room {
   constructor(number, description, walls, objects) {
     this.number = number;
     this.description = description;
-    this.walls = walls;
+    if (walls?.length === 4) {
+      if (this.isBlockedMaximumOne(walls)) {
+        this.walls = walls;
+      } else {
+        throw `You cannot create a room with multiple blocked walls!`;
+      }
+    } else {
+      throw `You cannot create a room with a number of walls other than 4!`;
+    }
     this.objects = objects;
+  }
+
+  hasMonster() {
+    for (const wall of this.walls) {
+      if (wall.character) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  unlock() {
+    const indexBlockedWall = this.walls.findIndex((wall) => wall.blocked);
+    if (indexBlockedWall !== -1) {
+      this.walls[indexBlockedWall].blocked = false;
+    }
+  }
+
+  isBlockedMaximumOne(walls) {
+    return this.walls.filter((wall) => wall.blocked).length <= 1;
   }
 
   getFullDescription() {

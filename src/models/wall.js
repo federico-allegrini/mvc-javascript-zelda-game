@@ -1,6 +1,7 @@
 class Wall {
   orientation;
   type;
+  // Wall blocked by monster
   blocked;
   exit;
 
@@ -12,13 +13,12 @@ class Wall {
   allowedOrientations = ["NORTH", "EAST", "SOUTH", "WEST"];
   allowedTypes = ["LINK", "WALL", "EXIT"];
 
-  constructor(orientation, type, room = null, character = null) {
+  constructor(orientation, type, room = undefined, character = undefined) {
     this.orientation = checkAllowedValues(
       orientation,
       this.allowedOrientations
     );
     this.type = checkAllowedValues(type, this.allowedTypes);
-    this.blocked = this.type === this.allowedTypes[1];
     this.exit = this.type === this.allowedTypes[2];
     if (room && this.type !== this.allowedTypes[0]) {
       this.room = room;
@@ -30,6 +30,7 @@ class Wall {
     } else {
       throw `You cannot place a character on a closed wall!`;
     }
+    this.blocked = this?.character.alive;
   }
 
   checkAllowedValues(value, allowedValues) {
