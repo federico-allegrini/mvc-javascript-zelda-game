@@ -1,3 +1,6 @@
+import { WALL_ORIENTATIONS, WALL_TYPES } from "../data/constants";
+import { checkAllowedValues } from "../lib/checkAllowedValues";
+
 class Player {
   name;
   commands = {
@@ -39,7 +42,34 @@ class Player {
     }
   }
 
-  move() {}
+  move(orientation) {
+    const {allowed: allowedOrientation} = checkAllowedValues(orientation, WALL_ORIENTATIONS)
+    if(allowedOrientation){
+      const wall = this.room.getWall(orientation);
+      if(wall.type ===WALL_TYPES[1]) {
+        this.message = `You cannot move in this direction because there is a wall.`
+      } else {
+        if(wall.blocked) {
+          this.message = `You cannot move in this direction because there is ${wall.character.name} blocking your way.`
+        } else {
+          if(orientation===WALL_ORIENTATIONS[3] && wall.type===WALL_TYPES[2]){
+            if(this?.character.endGame) {
+              this.message = `You saved the princess, you won the game!`;
+            } else {
+              this.message = `You left the castle without taking the princess with you, you lost the game...`;
+            }
+            this.end = true;
+          } else {
+            const linkedRoom = wall.room;
+            this.room = linkedRoom;
+            this.message = linkedRoom.getFullDescription();
+          }
+        }
+      }
+
+    }
+    if(wall.type)
+  }
 
   pick() {}
 

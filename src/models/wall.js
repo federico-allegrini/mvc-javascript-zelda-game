@@ -1,3 +1,6 @@
+import { WALL_ORIENTATIONS, WALL_TYPES } from "../data/constants";
+import { checkAllowedValues } from "../lib/checkAllowedValues";
+
 class Wall {
   orientation;
   type;
@@ -10,22 +13,17 @@ class Wall {
   // Monster blocking access to the link room
   character;
 
-  allowedOrientations = ["NORTH", "EAST", "SOUTH", "WEST"];
-  allowedTypes = ["LINK", "WALL", "EXIT"];
-
   constructor(orientation, type, room = undefined, character = undefined) {
-    this.orientation = checkAllowedValues(
-      orientation,
-      this.allowedOrientations
-    );
-    this.type = checkAllowedValues(type, this.allowedTypes);
-    this.exit = this.type === this.allowedTypes[2];
-    if (room && this.type !== this.allowedTypes[0]) {
+    this.checkAllowed(orientation, "orientation", WALL_ORIENTATIONS);
+    this.checkAllowed(type, "type", WALL_TYPES);
+    this.type = checkAllowedValues(type, WALL_TYPES);
+    this.exit = this.type === WALL_TYPES[2];
+    if (room && this.type !== WALL_TYPES[0]) {
       this.room = room;
     } else {
       throw `You cannot assign a room to a closed wall!`;
     }
-    if (character && this.type !== this.allowedTypes[0]) {
+    if (character && this.type !== WALL_TYPES[0]) {
       this.character = character;
     } else {
       throw `You cannot place a character on a closed wall!`;
@@ -33,14 +31,12 @@ class Wall {
     this.blocked = this?.character.alive;
   }
 
-  checkAllowedValues(value, allowedValues) {
-    const valueUpperCase = value.toUpperCase().trim();
-    if (allowedValues.includes(valueUpperCase)) {
-      return valueUpperCase;
+  checkAllowed(property, propertyName, allowedValues) {
+    const { allowed, value } = checkAllowedValues(property, allowedValues);
+    if (allowed) {
+      this[propertyName] = value;
     } else {
-      throw `Allowed values are only: ${this.allowedValues
-        .join(", ")
-        .slice(0, -2)}!`;
+      throw value;
     }
   }
 }

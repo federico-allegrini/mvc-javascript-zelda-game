@@ -41,6 +41,10 @@ class Room {
     return this.walls.filter((wall) => wall.blocked).length <= 1;
   }
 
+  getWall(orientation) {
+    return this.walls.find((wall) => wall.orientation === orientation);
+  }
+
   getFullDescription() {
     return [
       this.getNumberDescription(),
