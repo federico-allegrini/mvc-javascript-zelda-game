@@ -17,13 +17,13 @@ class Wall {
     this.checkAllowed(orientation, "orientation", WALL_ORIENTATIONS);
     this.checkAllowed(type, "type", WALL_TYPES);
     this.type = checkAllowedValues(type, WALL_TYPES);
-    this.exit = this.type === WALL_TYPES[2];
-    if (room && this.type !== WALL_TYPES[0]) {
+    this.exit = this.type === WALL_TYPES.exit;
+    if (room && this.type !== WALL_TYPES.link) {
       this.room = room;
     } else {
       throw `You cannot assign a room to a closed wall!`;
     }
-    if (character && this.type !== WALL_TYPES[0]) {
+    if (character && this.type !== WALL_TYPES.link) {
       this.character = character;
     } else {
       throw `You cannot place a character on a closed wall!`;

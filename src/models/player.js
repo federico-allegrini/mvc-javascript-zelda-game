@@ -46,13 +46,13 @@ class Player {
     const {allowed: allowedOrientation} = checkAllowedValues(orientation, WALL_ORIENTATIONS)
     if(allowedOrientation){
       const wall = this.room.getWall(orientation);
-      if(wall.type ===WALL_TYPES[1]) {
+      if(wall.type ===WALL_TYPES.wall) {
         this.message = `You cannot move in this direction because there is a wall.`
       } else {
         if(wall.blocked) {
           this.message = `You cannot move in this direction because there is ${wall.character.name} blocking your way.`
         } else {
-          if(orientation===WALL_ORIENTATIONS[3] && wall.type===WALL_TYPES[2]){
+          if(orientation===WALL_ORIENTATIONS.west && wall.exit){
             if(this?.character.endGame) {
               this.message = `You saved the princess, you won the game!`;
             } else {
