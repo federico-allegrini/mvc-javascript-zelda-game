@@ -43,17 +43,20 @@ class Player {
   }
 
   move(orientation) {
-    const {allowed: allowedOrientation} = checkAllowedValues(orientation, WALL_ORIENTATIONS)
-    if(allowedOrientation){
+    const { allowed: allowedOrientation } = checkAllowedValues(
+      orientation,
+      WALL_ORIENTATIONS
+    );
+    if (allowedOrientation) {
       const wall = this.room.getWall(orientation);
-      if(wall.type ===WALL_TYPES.wall) {
-        this.message = `You cannot move in this direction because there is a wall.`
+      if (wall.type === WALL_TYPES.wall) {
+        this.message = `You cannot move in this direction because there is a wall.`;
       } else {
-        if(wall.blocked) {
-          this.message = `You cannot move in this direction because there is ${wall.character.name} blocking your way.`
+        if (wall.blocked) {
+          this.message = `You cannot move in this direction because there is ${wall.character.name} blocking your way.`;
         } else {
-          if(orientation===WALL_ORIENTATIONS.west && wall.exit){
-            if(this?.character.endGame) {
+          if (orientation === WALL_ORIENTATIONS.west && wall.exit) {
+            if (this?.character.endGame) {
               this.message = `You saved the princess, you won the game!`;
             } else {
               this.message = `You left the castle without taking the princess with you, you lost the game...`;
@@ -66,9 +69,7 @@ class Player {
           }
         }
       }
-
     }
-    if(wall.type)
   }
 
   pick() {}
