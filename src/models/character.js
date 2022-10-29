@@ -1,3 +1,5 @@
+import { CHARACTER_TYPES } from "../data/constants";
+
 class Character {
   name;
   endGame;
@@ -9,7 +11,7 @@ class Character {
   constructor(name, object) {
     this.name = name.toUpperCase().trim();
     this.object = object;
-    this.endGame = this.name === "PRINCESS";
+    this.endGame = this.name === CHARACTER_TYPES.princess;
   }
 }
 

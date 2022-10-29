@@ -1,3 +1,5 @@
+import { CHARACTER_TYPES, WALL_ORIENTATIONS } from "../data/constants";
+
 class Room {
   number;
   description;
@@ -21,9 +23,30 @@ class Room {
     this.objects = objects;
   }
 
-  hasMonster() {
+  hasCharacter(type) {
+    const checkEndGame =
+      type === CHARACTER_TYPES.monster
+        ? !wall.character.endGame
+        : wall.character.endGame;
     for (const wall of this.walls) {
-      if (wall.character) {
+      if (wall.character && checkEndGame) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  hasMonster() {
+    return this.hasCharacter(CHARACTER_TYPES.monster);
+  }
+
+  hasPrincess() {
+    return this.hasMonster(CHARACTER_TYPES.princess);
+  }
+
+  containsObject(name) {
+    for (const object of this.objects) {
+      if (object.name === name.toUpperCase()) {
         return true;
       }
     }
@@ -38,11 +61,48 @@ class Room {
   }
 
   isBlockedMaximumOne(walls) {
-    return this.walls.filter((wall) => wall.blocked).length <= 1;
+    return walls.filter((wall) => wall.blocked).length <= 1;
   }
 
   getWall(orientation) {
-    return this.walls.find((wall) => wall.orientation === orientation);
+    return this.walls.find(
+      (wall) => wall.orientation === WALL_ORIENTATIONS[orientation]
+    );
+  }
+
+  getObject(name) {
+    return this.objects.find((object) => object.name === name);
+  }
+
+  getPrincess() {
+    for (const wall of this.walls) {
+      if (wall.character && wall.character.endGame) {
+        return wall.character;
+      }
+    }
+    return undefined;
+  }
+
+  removeObject(name) {
+    this.objects = this.objects.filetr((object) => object.name !== name);
+  }
+
+  removePrincess() {
+    for (const wall of this.walls) {
+      if (wall.character && wall.character.endGame) {
+        wall.character = undefined;
+      }
+    }
+  }
+
+  dropCharacter(character) {
+    for (const wall of this.walls) {
+      if (!wall.character) {
+        wall.character = character;
+        return wall.orientation;
+      }
+    }
+    return "";
   }
 
   getFullDescription() {
