@@ -12,7 +12,6 @@ class Game {
   }
 
   createRooms() {
-    debugger;
     const rooms = roomsData.rooms;
     for (const {
       number,
@@ -20,10 +19,10 @@ class Game {
       walls: wallsData,
       items: itemsData,
     } of rooms) {
-      const walls = wallsData.map(
+      const walls = wallsData?.map(
         ({ orientation, type }) => new Wall(orientation, type)
       );
-      const items = itemsData.map(({ name, value }) => new Item(name, value));
+      const items = itemsData?.map(({ name, value }) => new Item(name, value));
       rooms.push(new Room(number, description, walls, items));
     }
   }
