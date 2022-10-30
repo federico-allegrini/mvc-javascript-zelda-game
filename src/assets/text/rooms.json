@@ -1,0 +1,114 @@
+{
+  "rooms": [
+    {
+      "number": 1,
+      "description": "A cool shudder trickles down your spine. Glancing around nervously, you see somber portrait s staring at you from behind layers of dust, seemingly penetrating your very being.",
+      "walls": [
+        { "orientation": "NORTH", "type": "WALL" },
+        { "orientation": "EAST", "type": "LINK", "room": 2 },
+        { "orientation": "SOUTH", "type": "LINK", "room": 4 },
+        { "orientation": "WEST", "type": "EXIT" }
+      ],
+      "objects": []
+    },
+    {
+      "number": 2,
+      "description": "Cold, hesitant light streams in through a cracked window, casting eerie shadows on the walls",
+      "walls": [
+        { "orientation": "NORTH", "type": "WALL" },
+        { "orientation": "EAST", "type": "LINK", "room": 3 },
+        { "orientation": "SOUTH", "type": "LINK", "room": 5 },
+        { "orientation": "WEST", "type": "LINK", "room": 1 }
+      ],
+      "objects": [{ "name": "GOLDEN EGG", "value": 0.5 }]
+    },
+    {
+      "number": 3,
+      "description": "Description 3",
+      "walls": [
+        { "orientation": "NORTH", "type": "WALL" },
+        { "orientation": "EAST", "type": "WALL" },
+        { "orientation": "SOUTH", "type": "WALL" },
+        { "orientation": "WEST", "type": "LINK", "room": 2 }
+      ],
+      "objects": [{ "name": "MAGIC SHIELD", "value": 0 }]
+    },
+    {
+      "number": 4,
+      "description": "Description 4",
+      "walls": [
+        { "orientation": "NORTH", "type": "LINK", "room": 1 },
+        { "orientation": "EAST", "type": "WALL" },
+        { "orientation": "SOUTH", "type": "WALL" },
+        { "orientation": "WEST", "type": "WALL" }
+      ],
+      "objects": [{ "name": "GOLDEN CHALICE", "value": 0.5 }]
+    },
+    {
+      "number": 5,
+      "description": "Description 5",
+      "walls": [
+        { "orientation": "NORTH", "type": "LINK", "room": 2 },
+        { "orientation": "EAST", "type": "LINK", "room": 6 },
+        {
+          "orientation": "SOUTH",
+          "type": "LINK",
+          "room": 8,
+          "character": { "name": "MEDUSA", "object": "MAGIC SHIELD" }
+        },
+        { "orientation": "WEST", "type": "WALL" }
+      ]
+    },
+    {
+      "number": 6,
+      "description": "Description 6",
+      "walls": [
+        { "orientation": "NORTH", "type": "WALL" },
+        { "orientation": "EAST", "type": "WALL" },
+        {
+          "orientation": "SOUTH",
+          "type": "LINK",
+          "room": 9,
+          "character": { "name": "DRACULA", "object": "SILVER DAGGER" }
+        },
+        { "orientation": "WEST", "type": "LINK", "room": 5 }
+      ]
+    },
+    {
+      "number": 7,
+      "description": "Description 7",
+      "walls": [
+        { "orientation": "NORTH", "type": "WALL" },
+        { "orientation": "EAST", "type": "LINK", "room": 8 },
+        { "orientation": "SOUTH", "type": "WALL" },
+        { "orientation": "WEST", "type": "WALL" }
+      ],
+      "objects": [{ "name": "SILVER DAGGER", "value": 0 }]
+    },
+    {
+      "number": 8,
+      "description": "Description 8",
+      "walls": [
+        { "orientation": "NORTH", "type": "LINK", "room": 5 },
+        { "orientation": "EAST", "type": "WALL" },
+        { "orientation": "SOUTH", "type": "WALL" },
+        { "orientation": "WEST", "type": "LINK", "room": 7 }
+      ],
+      "objects": [{ "name": "PIECE OF PAPER", "value": 1 }]
+    },
+    {
+      "number": 9,
+      "description": "Description 9",
+      "walls": [
+        { "orientation": "NORTH", "type": "LINK", "room": 6 },
+        { "orientation": "EAST", "type": "WALL" },
+        {
+          "orientation": "SOUTH",
+          "type": "WALL",
+          "character": { "name": "PRINCESS" }
+        },
+        { "orientation": "WEST", "type": "WALL" }
+      ]
+    }
+  ]
+}
