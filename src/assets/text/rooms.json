@@ -9,7 +9,7 @@
         { "orientation": "SOUTH", "type": "LINK", "room": 4 },
         { "orientation": "WEST", "type": "EXIT" }
       ],
-      "objects": []
+      "items": []
     },
     {
       "number": 2,
@@ -20,7 +20,7 @@
         { "orientation": "SOUTH", "type": "LINK", "room": 5 },
         { "orientation": "WEST", "type": "LINK", "room": 1 }
       ],
-      "objects": [{ "name": "GOLDEN EGG", "value": 0.5 }]
+      "items": [{ "name": "GOLDEN EGG", "value": 0.5 }]
     },
     {
       "number": 3,
@@ -31,7 +31,7 @@
         { "orientation": "SOUTH", "type": "WALL" },
         { "orientation": "WEST", "type": "LINK", "room": 2 }
       ],
-      "objects": [{ "name": "MAGIC SHIELD", "value": 0 }]
+      "items": [{ "name": "MAGIC SHIELD", "value": 0 }]
     },
     {
       "number": 4,
@@ -42,7 +42,7 @@
         { "orientation": "SOUTH", "type": "WALL" },
         { "orientation": "WEST", "type": "WALL" }
       ],
-      "objects": [{ "name": "GOLDEN CHALICE", "value": 0.5 }]
+      "items": [{ "name": "GOLDEN CHALICE", "value": 0.5 }]
     },
     {
       "number": 5,
@@ -54,7 +54,7 @@
           "orientation": "SOUTH",
           "type": "LINK",
           "room": 8,
-          "character": { "name": "MEDUSA", "object": "MAGIC SHIELD" }
+          "character": { "name": "MEDUSA", "item": "MAGIC SHIELD" }
         },
         { "orientation": "WEST", "type": "WALL" }
       ]
@@ -69,7 +69,7 @@
           "orientation": "SOUTH",
           "type": "LINK",
           "room": 9,
-          "character": { "name": "DRACULA", "object": "SILVER DAGGER" }
+          "character": { "name": "DRACULA", "item": "SILVER DAGGER" }
         },
         { "orientation": "WEST", "type": "LINK", "room": 5 }
       ]
@@ -83,7 +83,7 @@
         { "orientation": "SOUTH", "type": "WALL" },
         { "orientation": "WEST", "type": "WALL" }
       ],
-      "objects": [{ "name": "SILVER DAGGER", "value": 0 }]
+      "items": [{ "name": "SILVER DAGGER", "value": 0 }]
     },
     {
       "number": 8,
@@ -94,7 +94,7 @@
         { "orientation": "SOUTH", "type": "WALL" },
         { "orientation": "WEST", "type": "LINK", "room": 7 }
       ],
-      "objects": [{ "name": "PIECE OF PAPER", "value": 1 }]
+      "items": [{ "name": "PIECE OF PAPER", "value": 1 }]
     },
     {
       "number": 9,

@@ -6,11 +6,11 @@ class Character {
   alive = true;
 
   // Weapon that kills him
-  object;
+  item;
 
-  constructor(name, object = undefined) {
+  constructor(name, item = undefined) {
     this.name = name.toUpperCase().trim();
-    this.object = object;
+    this.item = item;
     this.endGame = this.name === CHARACTER_TYPES.princess;
   }
 }

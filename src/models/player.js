@@ -2,8 +2,8 @@ import {
   WALL_ORIENTATIONS,
   WALL_TYPES,
   CHARACTER_TYPES,
-  MAX_PLAYER_OBJECTS,
-  MAX_ROOM_OBJECTS,
+  MAX_PLAYER_ITEMS,
+  MAX_ROOM_ITEMS,
 } from "../data/constants";
 import { checkAllowedValues } from "../lib/checkAllowedValues";
 
@@ -24,7 +24,7 @@ class Player {
   // Only "Princess"
   character;
   // Bag
-  objects = [];
+  items = [];
 
   constructor(name, room) {
     this.name = name.toUpperCase().trim();
@@ -34,8 +34,8 @@ class Player {
   attack() {
     if (this.room.hasMonster()) {
       const monster = this.room.character;
-      const weaponRequired = monster.object.name;
-      if (this.hasObject(weaponRequired)) {
+      const weaponRequired = monster.item.name;
+      if (this.hasItem(weaponRequired)) {
         this.message = `You attacked "${monster.name}" with the "${weaponRequired}", you killed the monster!`;
         monster.alive = false;
         this.room.unlock();
@@ -80,13 +80,13 @@ class Player {
 
   pick(item) {
     item = item.toUpperCase();
-    if (this.room.containsObject(item)) {
-      if (this.objects.length <= MAX_PLAYER_OBJECTS) {
-        this.objects.push(this.room.getObjet(item));
-        this.room.removeObject(item);
+    if (this.room.containsItem(item)) {
+      if (this.items.length <= MAX_PLAYER_ITEMS) {
+        this.items.push(this.room.getObjet(item));
+        this.room.removeItem(item);
         this.message = `You picked up and put "${item}" in your bag.`;
       } else {
-        this.message = `You can't pick anything. Your bag is full, it already contains ${MAX_PLAYER_OBJECTS} items!`;
+        this.message = `You can't pick anything. Your bag is full, it already contains ${MAX_PLAYER_ITEMS} items!`;
       }
     } else if (this.room.hasPrincess()) {
       if (this.hasPrincess()) {
@@ -97,19 +97,19 @@ class Player {
         this.message = `Good boy! You got ${CHARACTER_TYPES.princess}!`;
       }
     } else {
-      this.message = `You can't pick anything. There is no object or character named "${item}" in this room...`;
+      this.message = `You can't pick anything. There is no item or character named "${item}" in this room...`;
     }
   }
 
   drop(item) {
     item = item.toUpperCase();
-    if (this.hasObject(item)) {
-      if (this.room.objects.length < MAX_ROOM_OBJECTS) {
-        this.room.objects.push(this.getObjet(item));
-        this.removeObject(item);
+    if (this.hasItem(item)) {
+      if (this.room.items.length < MAX_ROOM_ITEMS) {
+        this.room.items.push(this.getObjet(item));
+        this.removeItem(item);
         this.message = `You drop "${item}" on the ground in room ${this.room.number}.`;
       } else {
-        this.message = `You can't drop "${item}". Room ${this.room.number} is full, it already contains ${MAX_ROOM_OBJECTS} items!`;
+        this.message = `You can't drop "${item}". Room ${this.room.number} is full, it already contains ${MAX_ROOM_ITEMS} items!`;
       }
     } else if (this.hasPrincess()) {
       const wallOrientation = this.room.dropCharacter(this.character);
@@ -120,7 +120,7 @@ class Player {
         this.message = `All the walls of room number ${this.room.number} are occupied by characters, you cannot drop "${item}"`;
       }
     } else {
-      this.message = `You can't drop anything. You don't have object or character named "${item}"...`;
+      this.message = `You can't drop anything. You don't have item or character named "${item}"...`;
     }
   }
 
@@ -133,9 +133,9 @@ class Player {
     this.end = true;
   }
 
-  hasObject(name) {
-    for (const object of this.objects) {
-      if (object.name === name.toUpperCase()) {
+  hasItem(name) {
+    for (const item of this.items) {
+      if (item.name === name.toUpperCase()) {
         return true;
       }
     }
@@ -146,12 +146,12 @@ class Player {
     return this?.character.endGame;
   }
 
-  getObject(name) {
-    return this.objects.find((object) => object.name === name);
+  getItem(name) {
+    return this.items.find((item) => item.name === name);
   }
 
-  removeObject(name) {
-    this.objects = this.objects.filetr((object) => object.name !== name);
+  removeItem(name) {
+    this.items = this.items.filetr((item) => item.name !== name);
   }
 }
 

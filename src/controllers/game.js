@@ -1,7 +1,7 @@
 import Player from "../models/player";
 import Room from "../models/room";
 import Wall from "../models/wall";
-import Object from "../models/object";
+import Item from "../models/item";
 
 import roomsData from "../assets/text/rooms.json";
 
@@ -18,15 +18,13 @@ class Game {
       number,
       description,
       walls: wallsData,
-      objects: objectsData,
+      items: itemsData,
     } of rooms) {
       const walls = wallsData.map(
         ({ orientation, type }) => new Wall(orientation, type)
       );
-      const objects = objectsData.map(
-        ({ name, value }) => new Object(name, value)
-      );
-      rooms.push(new Room(number, description, walls, objects));
+      const items = itemsData.map(({ name, value }) => new Item(name, value));
+      rooms.push(new Room(number, description, walls, items));
     }
   }
 }

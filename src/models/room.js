@@ -5,10 +5,10 @@ class Room {
   description;
 
   walls = [];
-  // Objects on the ground
-  objects = [];
+  // Items on the ground
+  items = [];
 
-  constructor(number, description, walls, objects) {
+  constructor(number, description, walls, items) {
     this.number = number;
     this.description = description;
     if (walls) {
@@ -22,7 +22,7 @@ class Room {
         throw `You cannot create a room with a number of walls other than 4!`;
       }
     }
-    this.objects = objects;
+    this.items = items;
   }
 
   hasCharacter(type) {
@@ -46,9 +46,9 @@ class Room {
     return this.hasMonster(CHARACTER_TYPES.princess);
   }
 
-  containsObject(name) {
-    for (const object of this.objects) {
-      if (object.name === name.toUpperCase()) {
+  containsItem(name) {
+    for (const item of this.items) {
+      if (item.name === name.toUpperCase()) {
         return true;
       }
     }
@@ -72,8 +72,8 @@ class Room {
     );
   }
 
-  getObject(name) {
-    return this.objects.find((object) => object.name === name);
+  getItem(name) {
+    return this.items.find((item) => item.name === name);
   }
 
   getPrincess() {
@@ -85,8 +85,8 @@ class Room {
     return undefined;
   }
 
-  removeObject(name) {
-    this.objects = this.objects.filetr((object) => object.name !== name);
+  removeItem(name) {
+    this.items = this.items.filetr((item) => item.name !== name);
   }
 
   removePrincess() {
@@ -138,9 +138,9 @@ class Room {
       .join(" ");
   }
 
-  getObjectsDescription() {
-    return this.objects
-      .map((object) => `The ${object.name} is lying on the floor.`)
+  getItemsDescription() {
+    return this.items
+      .map((item) => `The ${item.name} is lying on the floor.`)
       .join(" ");
   }
 }

@@ -6,5 +6,5 @@ export const WALL_ORIENTATIONS = {
 };
 export const WALL_TYPES = { link: "LINK", wall: "WALL", exit: "EXIT" };
 export const CHARACTER_TYPES = { monster: "MONSTER", princess: "PRINCESS" };
-export const MAX_PLAYER_OBJECTS = 10;
-export const MAX_ROOM_OBJECTS = 5;
+export const MAX_PLAYER_ITEMS = 10;
+export const MAX_ROOM_ITEMS = 5;

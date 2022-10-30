@@ -1,4 +1,4 @@
-class Object {
+class Item {
   name;
   value;
 
@@ -8,4 +8,4 @@ class Object {
   }
 }
 
-export default Object;
+export default Item;
