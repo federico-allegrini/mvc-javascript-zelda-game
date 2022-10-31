@@ -67,6 +67,7 @@ class Room {
   }
 
   getWall(orientation) {
+    orientation = orientation.toLowerCase();
     return this.walls.find(
       (wall) => wall.orientation === WALL_ORIENTATIONS[orientation]
     );
