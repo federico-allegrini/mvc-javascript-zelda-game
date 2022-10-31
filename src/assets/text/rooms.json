@@ -100,12 +100,16 @@
       "number": 9,
       "description": "Description 9",
       "walls": [
-        { "orientation": "NORTH", "type": "LINK", "room": 6 },
+        {
+          "orientation": "NORTH",
+          "type": "LINK",
+          "room": 6,
+          "character": { "name": "PRINCESS" }
+        },
         { "orientation": "EAST", "type": "WALL" },
         {
           "orientation": "SOUTH",
-          "type": "WALL",
-          "character": { "name": "PRINCESS" }
+          "type": "WALL"
         },
         { "orientation": "WEST", "type": "WALL" }
       ]
