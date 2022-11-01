@@ -9,4 +9,4 @@ page.append(title);
 
 const game = new Game("Fede");
 
-game.createRooms();
+game.play();
