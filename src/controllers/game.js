@@ -4,12 +4,15 @@ import Wall from "../models/wall";
 import Item from "../models/item";
 import Character from "../models/character";
 
+import GameView from "../views/gameView";
+
 import roomsData from "../assets/text/rooms.json";
 
 class Game {
   constructor(playerName) {
     this.rooms = this.createRooms();
     this.player = new Player(playerName, this.rooms[0]);
+    this.gameView = new GameView();
   }
 
   createRooms() {
@@ -64,6 +67,30 @@ class Game {
       );
     }
     return rooms;
+  }
+
+  executeCommandHandler() {
+    const [command, value] = this.gameView.getCommandInputValue();
+    if (this.player.checkCommand(command)) {
+      this.player[command](value);
+    }
+    if (this.player.end) {
+      this.gameView.enableCommandInput(false);
+    }
+    this.showMessageHandler();
+  }
+
+  showMessageHandler() {
+    this.gameView.updateMessageParagraph(this.player.message);
+  }
+
+  play() {
+    this.createRooms();
+    this.player.message = "Welcome!";
+    this.showMessageHandler();
+    this.gameView.commandInput.addEventListener("change", () =>
+      this.executeCommandHandler()
+    );
   }
 }
 

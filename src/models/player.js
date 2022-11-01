@@ -4,6 +4,7 @@ import {
   CHARACTER_TYPES,
   MAX_PLAYER_ITEMS,
   MAX_ROOM_ITEMS,
+  PLAYER_COMMANDS,
 } from "../data/constants";
 import { checkAllowedValues } from "../lib/checkAllowedValues";
 
@@ -152,6 +153,12 @@ class Player {
 
   removeItem(name) {
     this.items = this.items.filetr((item) => item.name !== name);
+  }
+
+  checkCommand(command) {
+    const valid = !!PLAYER_COMMANDS[command.trim().toLowerCase()];
+    this.message = !valid ? `Command ${command.toUpperCase()} not valid!` : "";
+    return valid;
   }
 }
 
