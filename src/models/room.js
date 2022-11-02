@@ -22,16 +22,13 @@ class Room {
         throw `You cannot create a room with a number of walls other than 4!`;
       }
     }
-    this.items = items;
+    this.items = items ? items : [];
   }
 
   hasCharacter(type) {
-    const checkEndGame =
-      type === CHARACTER_TYPES.monster
-        ? !wall.character.endGame
-        : wall.character.endGame;
+    const checkEndGame = type === CHARACTER_TYPES.princess;
     for (const wall of this.walls) {
-      if (wall.character && checkEndGame) {
+      if ((checkEndGame && wall?.character.endGame) || wall.character) {
         return true;
       }
     }
@@ -77,17 +74,26 @@ class Room {
     return this.items.find((item) => item.name === name);
   }
 
-  getPrincess() {
+  getCharacter(type) {
+    const checkEndGame = type === CHARACTER_TYPES.princess;
     for (const wall of this.walls) {
-      if (wall.character && wall.character.endGame) {
+      if ((checkEndGame && wall?.character.endGame) || wall.character) {
         return wall.character;
       }
     }
     return undefined;
   }
 
+  getMonster() {
+    return this.getCharacter(CHARACTER_TYPES.monster);
+  }
+
+  getPrincess() {
+    return this.getCharacter(CHARACTER_TYPES.princess);
+  }
+
   removeItem(name) {
-    this.items = this.items.filetr((item) => item.name !== name);
+    this.items = this.items.filter((item) => item.name !== name);
   }
 
   removePrincess() {
@@ -113,7 +119,8 @@ class Room {
       this.getNumberDescription(),
       this.getRoomDescription(),
       this.getWallsDescription(),
-    ].join("\n");
+      this.getItemsDescription(),
+    ].join("\n\n");
   }
 
   getNumberDescription() {
@@ -132,11 +139,11 @@ class Room {
             wall.room ? `to room ${wall.room.number}` : ""
           } to your ${wall.orientation}. ${
             wall.blocked
-              ? `Access to the room is blocked by the ${wall.character.name}.`
+              ? `\n*Access to the room ${wall.room.number} is blocked by the ${wall.character.name}.`
               : ""
           }`
       )
-      .join(" ");
+      .join("\n");
   }
 
   getItemsDescription() {

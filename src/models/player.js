@@ -34,7 +34,7 @@ class Player {
 
   attack() {
     if (this.room.hasMonster()) {
-      const monster = this.room.character;
+      const monster = this.room.getMonster();
       const weaponRequired = monster.item.name;
       if (this.hasItem(weaponRequired)) {
         this.message = `You attacked "${monster.name}" with the "${weaponRequired}", you killed the monster!`;
@@ -62,8 +62,11 @@ class Player {
         if (wall.blocked) {
           this.message = `You cannot move in this direction because there is ${wall.character.name} blocking your way.`;
         } else {
-          if (orientation === WALL_ORIENTATIONS.west && wall.exit) {
-            if (this?.character.endGame) {
+          if (
+            orientation.toUpperCase() === WALL_ORIENTATIONS.west &&
+            wall.exit
+          ) {
+            if (this.hasPrincess()) {
               this.message = `You saved the princess, you won the game!`;
             } else {
               this.message = `You left the castle without taking the princess with you, you lost the game...`;
@@ -76,6 +79,8 @@ class Player {
           }
         }
       }
+    } else {
+      this.message = `Movement towards "${orientation.toUpperCase()}" is not allowed!`;
     }
   }
 
@@ -83,7 +88,7 @@ class Player {
     item = item.toUpperCase();
     if (this.room.containsItem(item)) {
       if (this.items.length <= MAX_PLAYER_ITEMS) {
-        this.items.push(this.room.getObjet(item));
+        this.items.push(this.room.getItem(item));
         this.room.removeItem(item);
         this.message = `You picked up and put "${item}" in your bag.`;
       } else {
@@ -106,7 +111,7 @@ class Player {
     item = item.toUpperCase();
     if (this.hasItem(item)) {
       if (this.room.items.length < MAX_ROOM_ITEMS) {
-        this.room.items.push(this.getObjet(item));
+        this.room.items.push(this.getItem(item));
         this.removeItem(item);
         this.message = `You drop "${item}" on the ground in room ${this.room.number}.`;
       } else {
@@ -144,7 +149,7 @@ class Player {
   }
 
   hasPrincess() {
-    return this?.character.endGame;
+    return this.character?.endGame;
   }
 
   getItem(name) {
@@ -152,7 +157,7 @@ class Player {
   }
 
   removeItem(name) {
-    this.items = this.items.filetr((item) => item.name !== name);
+    this.items = this.items.filter((item) => item.name !== name);
   }
 
   checkCommand(command) {
