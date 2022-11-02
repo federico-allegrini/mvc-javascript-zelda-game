@@ -77,7 +77,12 @@ class Game {
     if (this.player.end) {
       this.gameView.enableCommandInput(false);
     }
+    this.resetCommandHandler();
     this.showMessageHandler();
+  }
+
+  resetCommandHandler() {
+    this.gameView.setCommandInputValue("");
   }
 
   showMessageHandler() {
@@ -86,6 +91,7 @@ class Game {
 
   play() {
     this.createRooms();
+    // TODO: Show message loaded by file
     this.player.message = "Welcome!";
     this.showMessageHandler();
     this.gameView.commandInput.addEventListener("change", () =>

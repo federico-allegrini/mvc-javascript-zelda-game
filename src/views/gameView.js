@@ -9,7 +9,11 @@ class GameView {
   }
 
   getCommandInputValue() {
-    return this.commandInput.value.split(" ");
+    return this.commandInput.value.split("-");
+  }
+
+  setCommandInputValue(value) {
+    this.commandInput.value = value;
   }
 
   enableCommandInput(enable) {
