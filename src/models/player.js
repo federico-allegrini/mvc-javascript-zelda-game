@@ -203,7 +203,7 @@ class Player {
   }
 
   look() {
-    this.message = this.room.getFullDescription();
+    this.message = `${this.room.getFullDescription()}\n${this.getBagContentsDescription()}`;
   }
 
   exit() {
@@ -222,6 +222,22 @@ class Player {
 
   hasPrincess() {
     return this.character?.endGame;
+  }
+
+  getBagContentsDescription() {
+    const bagContents = this.items
+      .map(
+        (item) =>
+          `- ${item.name}${item.value > 0 ? `: ${item.value} million $` : ""}`
+      )
+      .join("\n");
+    return this.items.length > 0
+      ? `You have the following items in your bag:\n${bagContents}\n*The total value is ${this.getBagContentsValue()} million $.`
+      : `Your bag is empty.`;
+  }
+
+  getBagContentsValue() {
+    return this.items.reduce((total, item) => total + item.value, 0);
   }
 
   getItem(name) {

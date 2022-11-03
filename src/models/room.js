@@ -153,7 +153,7 @@ class Room {
   getItemsDescription() {
     return this.items
       .map((item) => `The ${item.name} is lying on the floor.`)
-      .join(" ");
+      .join("\n");
   }
 }
 
