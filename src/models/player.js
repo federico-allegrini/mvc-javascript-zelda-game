@@ -1,3 +1,8 @@
+import Room from "./room";
+import Wall from "./wall";
+import Item from "./item";
+import Character from "./character";
+
 import {
   WALL_ORIENTATIONS,
   WALL_TYPES,
@@ -6,7 +11,14 @@ import {
   MAX_ROOM_ITEMS,
   PLAYER_COMMANDS,
 } from "../data/constants";
+
 import { checkAllowedValues } from "../lib/checkAllowedValues";
+
+import endDead from "../assets/text/endDead.txt";
+import endLose from "../assets/text/endLose.txt";
+import endWin from "../assets/text/endWin.txt";
+import start from "../assets/text/start.txt";
+import roomsData from "../assets/text/rooms.json";
 
 class Player {
   name;
@@ -18,7 +30,12 @@ class Player {
     look: this.look,
     exit: this.exit,
   };
-  message = "";
+  messages = {
+    endDead,
+    endLose,
+    endWin,
+  };
+  message = start;
   end = false;
 
   room;
@@ -27,9 +44,64 @@ class Player {
   // Bag
   items = [];
 
-  constructor(name, room) {
+  constructor(name) {
     this.name = name.toUpperCase().trim();
-    this.room = room;
+    this.room = this.createRooms()[0];
+    this.message += `\n-\n\n${this.room.getFullDescription()}`;
+  }
+
+  createRooms() {
+    const rooms = [];
+    const linksPositions = [];
+    const charactersPositions = [];
+    let allItems = [];
+    for (const {
+      number,
+      description,
+      walls: wallsData,
+      items: itemsData,
+    } of roomsData.rooms) {
+      const walls = wallsData?.map(
+        ({ orientation, type, room: linkedRoomNumber, character }) => {
+          linkedRoomNumber &&
+            linksPositions.push({
+              roomNumber: number,
+              orientation,
+              linkedRoomNumber,
+            });
+          character &&
+            charactersPositions.push({
+              roomNumber: number,
+              orientation,
+              character,
+            });
+          return new Wall(orientation, type);
+        }
+      );
+      const items = itemsData?.map(({ name, value }) => new Item(name, value));
+      allItems = items?.length > 0 ? [...allItems, ...items] : allItems;
+      rooms.push(new Room(number, description, walls, items));
+    }
+    // Link room's walls
+    for (const {
+      roomNumber,
+      orientation,
+      linkedRoomNumber,
+    } of linksPositions) {
+      rooms[roomNumber - 1]
+        .getWall(orientation)
+        .linkRoom(rooms[linkedRoomNumber - 1]);
+    }
+    // Add room's character
+    for (const { roomNumber, orientation, character } of charactersPositions) {
+      rooms[roomNumber - 1].getWall(orientation).insertCharacter(
+        new Character(
+          character.name,
+          allItems.find((item) => item.name === character.item)
+        )
+      );
+    }
+    return rooms;
   }
 
   attack() {
@@ -41,7 +113,7 @@ class Player {
         monster.alive = false;
         this.room.unlock();
       } else {
-        this.message = `You attacked "${monster.name}" without having the "${weaponRequired}", you are dead!`;
+        this.message = `You attacked "${monster.name}" without having the "${weaponRequired}", you are dead!\n${endDead}`;
         this.end = true;
       }
     } else {
@@ -67,9 +139,9 @@ class Player {
             wall.exit
           ) {
             if (this.hasPrincess()) {
-              this.message = `You saved the princess, you won the game!`;
+              this.message = endWin;
             } else {
-              this.message = `You left the castle without taking the princess with you, you lost the game...`;
+              this.message = endLose;
             }
             this.end = true;
           } else {
@@ -121,7 +193,7 @@ class Player {
       const wallOrientation = this.room.dropCharacter(this.character);
       if (wallOrientation !== "") {
         this.character = undefined;
-        this.message = `You dropped ${CHARACTER_TYPES.princess} on wall ${wallOrientation} in room number ${this.room.number}!`;
+        this.message = `You dropped ${CHARACTER_TYPES.princess} in room number ${this.room.number}!`;
       } else {
         this.message = `All the walls of room number ${this.room.number} are occupied by characters, you cannot drop "${item}"`;
       }

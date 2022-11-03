@@ -13,7 +13,7 @@
     },
     {
       "number": 2,
-      "description": "Cold, hesitant light streams in through a cracked window, casting eerie shadows on the walls",
+      "description": "Cold, hesitant light streams in through a cracked window, casting eerie shadows on the walls.",
       "walls": [
         { "orientation": "NORTH", "type": "WALL" },
         { "orientation": "EAST", "type": "LINK", "room": 3 },
@@ -24,7 +24,7 @@
     },
     {
       "number": 3,
-      "description": "Description 3",
+      "description": "Walls oozing moss, the room is dark. Something there is something leaning against the wall.",
       "walls": [
         { "orientation": "NORTH", "type": "WALL" },
         { "orientation": "EAST", "type": "WALL" },
@@ -35,7 +35,7 @@
     },
     {
       "number": 4,
-      "description": "Description 4",
+      "description": "A strangely bright room, on an iron table there is something covered with a red cloth.",
       "walls": [
         { "orientation": "NORTH", "type": "LINK", "room": 1 },
         { "orientation": "EAST", "type": "WALL" },
@@ -46,7 +46,7 @@
     },
     {
       "number": 5,
-      "description": "Description 5",
+      "description": "There is no silence in this room, snake hisses are heard in the air...",
       "walls": [
         { "orientation": "NORTH", "type": "LINK", "room": 2 },
         { "orientation": "EAST", "type": "LINK", "room": 6 },
@@ -61,7 +61,7 @@
     },
     {
       "number": 6,
-      "description": "Description 6",
+      "description": "A throne and a coffin are leaning close together, strange to have entered the king's room.",
       "walls": [
         { "orientation": "NORTH", "type": "WALL" },
         { "orientation": "EAST", "type": "WALL" },
@@ -76,7 +76,7 @@
     },
     {
       "number": 7,
-      "description": "Description 7",
+      "description": "It seems to have entered an old armory, many rusty objects, but there seems to be something not ruined.",
       "walls": [
         { "orientation": "NORTH", "type": "WALL" },
         { "orientation": "EAST", "type": "LINK", "room": 8 },
@@ -87,7 +87,7 @@
     },
     {
       "number": 8,
-      "description": "Description 8",
+      "description": "The old castle library, a place where you can find valuable and valuable information.",
       "walls": [
         { "orientation": "NORTH", "type": "LINK", "room": 5 },
         { "orientation": "EAST", "type": "WALL" },
@@ -98,7 +98,7 @@
     },
     {
       "number": 9,
-      "description": "Description 9",
+      "description": "The highest room in the castle, in the old tower. A gentle voice seems to call you.",
       "walls": [
         {
           "orientation": "NORTH",

@@ -16,6 +16,10 @@ class GameView {
     this.commandInput.value = value;
   }
 
+  focusCommandInput() {
+    this.commandInput.focus();
+  }
+
   enableCommandInput(enable) {
     this.commandInput.disabled = !enable;
   }

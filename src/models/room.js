@@ -141,6 +141,10 @@ class Room {
             wall.blocked
               ? `\n*Access to the room ${wall.room.number} is blocked by the ${wall.character.name}.`
               : ""
+          } ${
+            wall.character?.endGame
+              ? `\n*The beautiful ${CHARACTER_TYPES.princess} is lying in the room.`
+              : ""
           }`
       )
       .join("\n");
