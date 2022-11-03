@@ -1,3 +1,8 @@
+import Room from "./room";
+import Wall from "./wall";
+import Item from "./item";
+import Character from "./character";
+
 import {
   WALL_ORIENTATIONS,
   WALL_TYPES,
@@ -6,7 +11,14 @@ import {
   MAX_ROOM_ITEMS,
   PLAYER_COMMANDS,
 } from "../data/constants";
+
 import { checkAllowedValues } from "../lib/checkAllowedValues";
+
+import endDead from "../assets/text/endDead.txt";
+import endLose from "../assets/text/endLose.txt";
+import endWin from "../assets/text/endWin.txt";
+import start from "../assets/text/start.txt";
+import roomsData from "../assets/text/rooms.json";
 
 class Player {
   name;
@@ -18,7 +30,12 @@ class Player {
     look: this.look,
     exit: this.exit,
   };
-  message = "";
+  messages = {
+    endDead,
+    endLose,
+    endWin,
+  };
+  message = start;
   end = false;
 
   room;
@@ -27,21 +44,76 @@ class Player {
   // Bag
   items = [];
 
-  constructor(name, room) {
+  constructor(name) {
     this.name = name.toUpperCase().trim();
-    this.room = room;
+    this.room = this.createRooms()[0];
+    this.message += `\n-\n\n${this.room.getFullDescription()}`;
+  }
+
+  createRooms() {
+    const rooms = [];
+    const linksPositions = [];
+    const charactersPositions = [];
+    let allItems = [];
+    for (const {
+      number,
+      description,
+      walls: wallsData,
+      items: itemsData,
+    } of roomsData.rooms) {
+      const walls = wallsData?.map(
+        ({ orientation, type, room: linkedRoomNumber, character }) => {
+          linkedRoomNumber &&
+            linksPositions.push({
+              roomNumber: number,
+              orientation,
+              linkedRoomNumber,
+            });
+          character &&
+            charactersPositions.push({
+              roomNumber: number,
+              orientation,
+              character,
+            });
+          return new Wall(orientation, type);
+        }
+      );
+      const items = itemsData?.map(({ name, value }) => new Item(name, value));
+      allItems = items?.length > 0 ? [...allItems, ...items] : allItems;
+      rooms.push(new Room(number, description, walls, items));
+    }
+    // Link room's walls
+    for (const {
+      roomNumber,
+      orientation,
+      linkedRoomNumber,
+    } of linksPositions) {
+      rooms[roomNumber - 1]
+        .getWall(orientation)
+        .linkRoom(rooms[linkedRoomNumber - 1]);
+    }
+    // Add room's character
+    for (const { roomNumber, orientation, character } of charactersPositions) {
+      rooms[roomNumber - 1].getWall(orientation).insertCharacter(
+        new Character(
+          character.name,
+          allItems.find((item) => item.name === character.item)
+        )
+      );
+    }
+    return rooms;
   }
 
   attack() {
     if (this.room.hasMonster()) {
-      const monster = this.room.character;
+      const monster = this.room.getMonster();
       const weaponRequired = monster.item.name;
       if (this.hasItem(weaponRequired)) {
         this.message = `You attacked "${monster.name}" with the "${weaponRequired}", you killed the monster!`;
         monster.alive = false;
         this.room.unlock();
       } else {
-        this.message = `You attacked "${monster.name}" without having the "${weaponRequired}", you are dead!`;
+        this.message = `You attacked "${monster.name}" without having the "${weaponRequired}", you are dead!\n${endDead}`;
         this.end = true;
       }
     } else {
@@ -62,11 +134,14 @@ class Player {
         if (wall.blocked) {
           this.message = `You cannot move in this direction because there is ${wall.character.name} blocking your way.`;
         } else {
-          if (orientation === WALL_ORIENTATIONS.west && wall.exit) {
-            if (this?.character.endGame) {
-              this.message = `You saved the princess, you won the game!`;
+          if (
+            orientation.toUpperCase() === WALL_ORIENTATIONS.west &&
+            wall.exit
+          ) {
+            if (this.hasPrincess()) {
+              this.message = endWin;
             } else {
-              this.message = `You left the castle without taking the princess with you, you lost the game...`;
+              this.message = endLose;
             }
             this.end = true;
           } else {
@@ -76,6 +151,8 @@ class Player {
           }
         }
       }
+    } else {
+      this.message = `Movement towards "${orientation.toUpperCase()}" is not allowed!`;
     }
   }
 
@@ -83,7 +160,7 @@ class Player {
     item = item.toUpperCase();
     if (this.room.containsItem(item)) {
       if (this.items.length <= MAX_PLAYER_ITEMS) {
-        this.items.push(this.room.getObjet(item));
+        this.items.push(this.room.getItem(item));
         this.room.removeItem(item);
         this.message = `You picked up and put "${item}" in your bag.`;
       } else {
@@ -106,7 +183,7 @@ class Player {
     item = item.toUpperCase();
     if (this.hasItem(item)) {
       if (this.room.items.length < MAX_ROOM_ITEMS) {
-        this.room.items.push(this.getObjet(item));
+        this.room.items.push(this.getItem(item));
         this.removeItem(item);
         this.message = `You drop "${item}" on the ground in room ${this.room.number}.`;
       } else {
@@ -116,7 +193,7 @@ class Player {
       const wallOrientation = this.room.dropCharacter(this.character);
       if (wallOrientation !== "") {
         this.character = undefined;
-        this.message = `You dropped ${CHARACTER_TYPES.princess} on wall ${wallOrientation} in room number ${this.room.number}!`;
+        this.message = `You dropped ${CHARACTER_TYPES.princess} in room number ${this.room.number}!`;
       } else {
         this.message = `All the walls of room number ${this.room.number} are occupied by characters, you cannot drop "${item}"`;
       }
@@ -126,7 +203,7 @@ class Player {
   }
 
   look() {
-    this.message = this.room.getFullDescription();
+    this.message = `${this.room.getFullDescription()}\n${this.getBagContentsDescription()}`;
   }
 
   exit() {
@@ -144,7 +221,23 @@ class Player {
   }
 
   hasPrincess() {
-    return this?.character.endGame;
+    return this.character?.endGame;
+  }
+
+  getBagContentsDescription() {
+    const bagContents = this.items
+      .map(
+        (item) =>
+          `- ${item.name}${item.value > 0 ? `: ${item.value} million $` : ""}`
+      )
+      .join("\n");
+    return this.items.length > 0
+      ? `You have the following items in your bag:\n${bagContents}\n*The total value is ${this.getBagContentsValue()} million $.`
+      : `Your bag is empty.`;
+  }
+
+  getBagContentsValue() {
+    return this.items.reduce((total, item) => total + item.value, 0);
   }
 
   getItem(name) {
@@ -152,7 +245,7 @@ class Player {
   }
 
   removeItem(name) {
-    this.items = this.items.filetr((item) => item.name !== name);
+    this.items = this.items.filter((item) => item.name !== name);
   }
 
   checkCommand(command) {

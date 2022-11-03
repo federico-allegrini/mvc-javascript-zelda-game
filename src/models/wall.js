@@ -41,7 +41,7 @@ class Wall {
         throw `You cannot place a character on a closed wall!`;
       }
     }
-    this.blocked = !!this.character?.alive;
+    this.blocked = !!this.character?.alive && !this.character.endGame;
   }
 
   checkAllowed(property, propertyName, allowedValues) {
