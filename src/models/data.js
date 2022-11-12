@@ -10,20 +10,28 @@ import start from "../assets/text/start.txt";
 import roomsData from "../assets/text/rooms.json";
 
 class Data {
-  rooms;
+  rooms = [];
   messages = {
     endDead,
     endLose,
     endWin,
-    start
+    start,
   };
 
   constructor() {
-    this.rooms = this.createRooms();
+    this.createRooms();
+    console.dir(this.rooms);
   }
 
   createRooms() {
-    const rooms = [];
+    debugger;
+    const [linksPositions, charactersPositions, allItems] =
+      this.createRoomsWithoutLinksAndCharacters();
+    this.addLinkedRoomsWalls(linksPositions);
+    this.addRoomsCharacter(charactersPositions, allItems);
+  }
+
+  createRoomsWithoutLinksAndCharacters() {
     const linksPositions = [];
     const charactersPositions = [];
     let allItems = [];
@@ -52,30 +60,33 @@ class Data {
       );
       const items = itemsData?.map(({ name, value }) => new Item(name, value));
       allItems = items?.length > 0 ? [...allItems, ...items] : allItems;
-      rooms.push(new Room(number, description, walls, items));
+      this.rooms.push(new Room(number, description, walls, items));
     }
-    // Link room's walls
+    return [linksPositions, charactersPositions, allItems];
+  }
+
+  addLinkedRoomsWalls(linksPositions) {
     for (const {
       roomNumber,
       orientation,
       linkedRoomNumber,
     } of linksPositions) {
-      rooms[roomNumber - 1]
+      this.rooms[roomNumber - 1]
         .getWall(orientation)
-        .linkRoom(rooms[linkedRoomNumber - 1]);
+        .linkRoom(this.rooms[linkedRoomNumber - 1]);
     }
-    // Add room's character
+  }
+
+  addRoomsCharacter(charactersPositions, allItems) {
     for (const { roomNumber, orientation, character } of charactersPositions) {
-      rooms[roomNumber - 1].getWall(orientation).insertCharacter(
+      this.rooms[roomNumber - 1].getWall(orientation).insertCharacter(
         new Character(
           character.name,
           allItems.find((item) => item.name === character.item)
         )
       );
     }
-    return rooms;
   }
-
 }
 
 export default Data;
