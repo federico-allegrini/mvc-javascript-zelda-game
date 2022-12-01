@@ -1,10 +1,12 @@
+import Data from "../models/data";
 import Player from "../models/player";
 
 import GameView from "../views/gameView";
 
 class Game {
   constructor(playerName) {
-    this.player = new Player(playerName);
+    this.data = new Data();
+    this.player = new Player(playerName, this.data);
     this.gameView = new GameView();
   }
 

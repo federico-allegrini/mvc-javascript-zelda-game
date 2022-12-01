@@ -1,8 +1,3 @@
-import Room from "./room";
-import Wall from "./wall";
-import Item from "./item";
-import Character from "./character";
-
 import {
   WALL_ORIENTATIONS,
   WALL_TYPES,
@@ -14,12 +9,6 @@ import {
 
 import { checkAllowedValues } from "../lib/checkAllowedValues";
 
-import endDead from "../assets/text/endDead.txt";
-import endLose from "../assets/text/endLose.txt";
-import endWin from "../assets/text/endWin.txt";
-import start from "../assets/text/start.txt";
-import roomsData from "../assets/text/rooms.json";
-
 class Player {
   name;
   commands = {
@@ -30,12 +19,7 @@ class Player {
     look: this.look,
     exit: this.exit,
   };
-  messages = {
-    endDead,
-    endLose,
-    endWin,
-  };
-  message = start;
+  message = "";
   end = false;
 
   room;
@@ -44,64 +28,11 @@ class Player {
   // Bag
   items = [];
 
-  constructor(name) {
+  constructor(name, data) {
     this.name = name.toUpperCase().trim();
-    this.room = this.createRooms()[0];
-    this.message += `\n-\n\n${this.room.getFullDescription()}`;
-  }
-
-  createRooms() {
-    const rooms = [];
-    const linksPositions = [];
-    const charactersPositions = [];
-    let allItems = [];
-    for (const {
-      number,
-      description,
-      walls: wallsData,
-      items: itemsData,
-    } of roomsData.rooms) {
-      const walls = wallsData?.map(
-        ({ orientation, type, room: linkedRoomNumber, character }) => {
-          linkedRoomNumber &&
-            linksPositions.push({
-              roomNumber: number,
-              orientation,
-              linkedRoomNumber,
-            });
-          character &&
-            charactersPositions.push({
-              roomNumber: number,
-              orientation,
-              character,
-            });
-          return new Wall(orientation, type);
-        }
-      );
-      const items = itemsData?.map(({ name, value }) => new Item(name, value));
-      allItems = items?.length > 0 ? [...allItems, ...items] : allItems;
-      rooms.push(new Room(number, description, walls, items));
-    }
-    // Link room's walls
-    for (const {
-      roomNumber,
-      orientation,
-      linkedRoomNumber,
-    } of linksPositions) {
-      rooms[roomNumber - 1]
-        .getWall(orientation)
-        .linkRoom(rooms[linkedRoomNumber - 1]);
-    }
-    // Add room's character
-    for (const { roomNumber, orientation, character } of charactersPositions) {
-      rooms[roomNumber - 1].getWall(orientation).insertCharacter(
-        new Character(
-          character.name,
-          allItems.find((item) => item.name === character.item)
-        )
-      );
-    }
-    return rooms;
+    this.data = data;
+    this.room = this.data.rooms[0];
+    this.message = this.data.messages.start + `\n-\n\n${this.room.getFullDescription()}`;
   }
 
   attack() {
@@ -113,7 +44,7 @@ class Player {
         monster.alive = false;
         this.room.unlock();
       } else {
-        this.message = `You attacked "${monster.name}" without having the "${weaponRequired}", you are dead!\n${endDead}`;
+        this.message = `You attacked "${monster.name}" without having the "${weaponRequired}", you are dead!\n${this.data.messages.endDead}`;
         this.end = true;
       }
     } else {
@@ -139,9 +70,9 @@ class Player {
             wall.exit
           ) {
             if (this.hasPrincess()) {
-              this.message = endWin;
+              this.message = this.data.messages.endWin;
             } else {
-              this.message = endLose;
+              this.message = this.data.messages.endLose;
             }
             this.end = true;
           } else {
